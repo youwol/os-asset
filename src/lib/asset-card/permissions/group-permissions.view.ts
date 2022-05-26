@@ -42,8 +42,8 @@ export class ExposedGroupState {
 
     refresh() {
         this.loading$.next(true)
-        new AssetsGateway.Client().assetsDeprecated
-            .getAccess$(this.assetId)
+        new AssetsGateway.Client().assets
+            .queryAccessInfo$({ assetId: this.assetId })
             .pipe(raiseHTTPErrors())
             .subscribe((info) => {
                 const groupAccess =
@@ -170,7 +170,7 @@ export class ExposedGroupView implements VirtualDOM {
 }
 
 function expirationDateAccessView(
-    access: AssetsGateway.GroupAccess,
+    access: AssetsBackend.GroupAccess,
     parameters$: Subject<{ [k: string]: unknown }>,
 ) {
     const edition$ = new BehaviorSubject<boolean>(false)

@@ -1,7 +1,7 @@
 import { VirtualDOM } from '@youwol/flux-view'
 
 import { Tabs } from '@youwol/fv-tabs'
-import { AssetsGateway } from '@youwol/http-clients'
+import { AssetsBackend } from '@youwol/http-clients'
 import { Subject } from 'rxjs'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -33,8 +33,8 @@ export class AssetCardView implements VirtualDOM {
     public readonly assetOutput$: Subject<AssetWithPermissions>
 
     constructor(params: {
-        asset: AssetsGateway.Asset
-        assetOutput$: Subject<AssetsGateway.Asset>
+        asset: AssetsBackend.GetAssetResponse
+        assetOutput$: Subject<AssetsBackend.GetAssetResponse>
         withTabs?: { [key: string]: VirtualDOM }
         forceReadonly?: boolean
     }) {
@@ -60,7 +60,7 @@ export class AssetCardView implements VirtualDOM {
 
 export class AssetCardTabs extends Tabs.View {
     static ClassSelector = 'asset-card-tabs'
-    public readonly asset: AssetsGateway.Asset
+    public readonly asset: AssetsBackend.GetAssetResponse
 
     constructor(params: {
         asset: AssetWithPermissions
