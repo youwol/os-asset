@@ -110,7 +110,7 @@ export class AssetOverview implements VirtualDOM {
                                 Math.floor(Math.random() * 1e5) +
                                 '.' +
                                 file.name.split('.').slice(-1)
-                            return this.assetsClient.addImage({
+                            return this.assetsClient.addImage$({
                                 assetId: this.asset.assetId,
                                 filename: id,
                                 body: {
@@ -126,7 +126,7 @@ export class AssetOverview implements VirtualDOM {
                 screenShotsView.fileRemoved$
                     .pipe(
                         mergeMap(({ imageId }) =>
-                            this.assetsClient.removeImage({
+                            this.assetsClient.removeImage$({
                                 assetId: this.asset.assetId,
                                 filename: imageId,
                             }),
