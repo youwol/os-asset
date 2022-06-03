@@ -59,6 +59,7 @@ export class AssetOverview implements VirtualDOM {
             this.tags$,
             this.description$,
         ]).pipe(
+            skip(1),
             mergeMap(([name, tags, description]) => {
                 return this.assetsClient.updateAsset$({
                     assetId: this.asset.assetId,
