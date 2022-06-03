@@ -1,6 +1,6 @@
 import { child$, VirtualDOM } from '@youwol/flux-view'
 import { BehaviorSubject, ReplaySubject } from 'rxjs'
-import { AssetWithPermissions } from '../models'
+import { AssetsBackend } from '@youwol/http-clients'
 
 export class ImagesCarouselView implements VirtualDOM {
     static ClassSelector = 'images-carousel-view'
@@ -92,7 +92,8 @@ export class AssetScreenShotsView implements VirtualDOM {
     static ClassSelector = 'asset-screenshots-view'
 
     public readonly class = `${AssetScreenShotsView.ClassSelector} w-100 my-3`
-    public readonly asset: AssetWithPermissions
+    public readonly asset: AssetsBackend.GetAssetResponse
+    public readonly permissions: AssetsBackend.GetPermissionsResponse
     public readonly children: VirtualDOM[]
     public readonly images$: BehaviorSubject<string[]>
     public readonly forceReadonly: boolean
@@ -107,7 +108,8 @@ export class AssetScreenShotsView implements VirtualDOM {
 
     constructor(params: {
         images$: BehaviorSubject<string[]>
-        asset: AssetWithPermissions
+        asset: AssetsBackend.GetAssetResponse
+        permissions: AssetsBackend.GetPermissionsResponse
         forceReadonly?: boolean
     }) {
         Object.assign(this, params)
@@ -115,14 +117,14 @@ export class AssetScreenShotsView implements VirtualDOM {
             this.addImageFromClipboard(pasteEvent)
         }
 
-        if (this.asset.permissions.write && !this.forceReadonly) {
+        if (this.permissions.write && !this.forceReadonly) {
             window.addEventListener('paste', pasteCb, false)
         }
 
         this.disconnectedCallback = () => {
             window.removeEventListener('paste', pasteCb, false)
         }
-        const editable = this.asset.permissions.write && !this.forceReadonly
+        const editable = this.permissions.write && !this.forceReadonly
 
         const imageView = (url) => {
             return {
@@ -158,7 +160,7 @@ export class AssetScreenShotsView implements VirtualDOM {
                             ? 'Paste from clipboard to add images'
                             : '',
                         onDelete:
-                            this.asset.permissions.write && !this.forceReadonly
+                            this.permissions.write && !this.forceReadonly
                                 ? (index) => {
                                       const imageId = this.images$
                                           .getValue()

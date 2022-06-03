@@ -11,18 +11,23 @@ import { distinct, map, skip } from 'rxjs/operators'
 export class ExposedGroupState {
     public readonly groupName: string
     public readonly groupId: string
+    public readonly asset: AssetsBackend.GetAssetResponse
+    public readonly permissions: AssetsBackend.GetPermissionsResponse
+    public readonly data: AssetsBackend.ExposingGroup
     public readonly groupAccess$: BehaviorSubject<AssetsBackend.ExposingGroup>
     public readonly loading$ = new BehaviorSubject<boolean>(false)
     public readonly client = new AssetsGateway.Client().assets
 
-    constructor(
-        public readonly assetId: string,
-        public readonly data: AssetsBackend.ExposingGroup,
-    ) {
-        this.groupId = data.groupId
-        this.groupName = data.name
+    constructor(params: {
+        asset: AssetsBackend.GetAssetResponse
+        permissions: AssetsBackend.GetPermissionsResponse
+        data: AssetsBackend.ExposingGroup
+    }) {
+        Object.assign(this, params)
+        this.groupId = this.data.groupId
+        this.groupName = this.data.name
         this.groupAccess$ = new BehaviorSubject<AssetsBackend.ExposingGroup>(
-            data,
+            this.data,
         )
     }
 
@@ -30,7 +35,7 @@ export class ExposedGroupState {
         this.loading$.next(true)
         this.client
             .upsertAccessPolicy$({
-                assetId: this.assetId,
+                assetId: this.asset.assetId,
                 groupId: this.groupId,
                 body,
             })
@@ -43,7 +48,7 @@ export class ExposedGroupState {
     refresh() {
         this.loading$.next(true)
         new AssetsGateway.Client().assets
-            .queryAccessInfo$({ assetId: this.assetId })
+            .queryAccessInfo$({ assetId: this.asset.assetId })
             .pipe(raiseHTTPErrors())
             .subscribe((info) => {
                 const groupAccess =
@@ -86,7 +91,9 @@ export class ExposedGroupView implements VirtualDOM {
             optionsRead,
             state.data.access.read,
         )
-        const selectViewRead = new Select.View({ state: selectStateRead })
+        const valueViewRead = state.permissions.write
+            ? new Select.View({ state: selectStateRead })
+            : { innerText: state.data.access.read }
 
         const optionsShare = [
             new Item('forbidden', 'Forbidden', null),
@@ -97,7 +104,9 @@ export class ExposedGroupView implements VirtualDOM {
             optionsShare,
             state.data.access.share,
         )
-        const selectViewShare = new Select.View({ state: selectStateShare })
+        const valueViewShare = state.permissions.write
+            ? new Select.View({ state: selectStateShare })
+            : { innerText: state.data.access.share }
 
         const parameters$ = new BehaviorSubject<{ [k: string]: unknown }>({})
 
@@ -140,15 +149,23 @@ export class ExposedGroupView implements VirtualDOM {
                     {
                         class: 'd-flex flex-column align-items-center',
                         children: [
-                            { innerText: 'read', class: 'px-2' },
-                            selectViewRead,
+                            {
+                                innerText: 'read',
+                                class: 'px-2',
+                                style: { fontWeight: 'bolder' },
+                            },
+                            valueViewRead,
                         ],
                     },
                     {
                         class: 'd-flex flex-column align-items-center',
                         children: [
-                            { innerText: 'share', class: 'px-2' },
-                            selectViewShare,
+                            {
+                                innerText: 'share',
+                                class: 'px-2',
+                                style: { fontWeight: 'bolder' },
+                            },
+                            valueViewShare,
                         ],
                     },
                 ],

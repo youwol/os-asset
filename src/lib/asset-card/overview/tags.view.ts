@@ -8,19 +8,23 @@ import {
 import { BehaviorSubject, Observable, of } from 'rxjs'
 import { skip } from 'rxjs/operators'
 import { IconButtonView, TextEditableView } from '../misc.view'
-import { AssetWithPermissions } from '../models'
+import { AssetsBackend } from '@youwol/http-clients'
 
 export class AssetTagsView implements VirtualDOM {
     static ClassSelector = 'asset-tags-view'
 
     public readonly class = `${AssetTagsView.ClassSelector} w-100 d-flex justify-content-center`
-    public readonly asset: AssetWithPermissions
+
+    public readonly asset: AssetsBackend.GetAssetResponse
+    public readonly permissions: AssetsBackend.GetPermissionsResponse
+
     public readonly children: VirtualDOM[]
     public readonly tags$: BehaviorSubject<string[]>
     public readonly forceReadonly: boolean
     constructor(params: {
         tags$: BehaviorSubject<string[]>
-        asset: AssetWithPermissions
+        asset: AssetsBackend.GetAssetResponse
+        permissions: AssetsBackend.GetPermissionsResponse
         forceReadonly?: boolean
     }) {
         Object.assign(this, params)
@@ -35,7 +39,7 @@ export class AssetTagsView implements VirtualDOM {
                       }
                     : {},
             ),
-            this.asset.permissions.write && !this.forceReadonly
+            this.permissions.write && !this.forceReadonly
                 ? new TagsEditableView({ tags$: this.tags$ })
                 : AssetTagsView.readOnlyView(this.tags$),
         ]

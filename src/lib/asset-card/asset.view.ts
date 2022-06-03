@@ -16,15 +16,19 @@ export class AssetView implements VirtualDOM {
     }
     public readonly children: VirtualDOM[]
     public readonly asset: AssetsBackend.GetAssetResponse
-
+    public readonly permissions: AssetsBackend.GetPermissionsResponse
     public readonly leftNavState: DockableTabs.State
 
-    constructor(params: { asset: AssetsBackend.GetAssetResponse }) {
+    constructor(params: {
+        asset: AssetsBackend.GetAssetResponse
+        permissions: AssetsBackend.GetPermissionsResponse
+    }) {
         Object.assign(this, params)
         let tabs$ = Installer.getInstallManifest$().pipe(
             map(({ assetPreviews }) => {
                 return assetPreviews({
                     asset: this.asset,
+                    permissions: this.permissions,
                     cdnClient,
                     fluxView,
                     assetsGtwClient: new AssetsGateway.Client(),
@@ -32,9 +36,13 @@ export class AssetView implements VirtualDOM {
             }),
             map((previews) => {
                 return [
-                    new GeneralTab({ asset: this.asset }),
+                    new GeneralTab({
+                        asset: this.asset,
+                        permissions: this.permissions,
+                    }),
                     new PermissionsTab({
                         asset: this.asset,
+                        permissions: this.permissions,
                     }),
                     ...previews.map(
                         (preview) =>
@@ -83,7 +91,10 @@ function getBackgroundChild$(asset: AssetsBackend.GetAssetResponse) {
     })
 }
 export class GeneralTab extends DockableTabs.Tab {
-    constructor(params: { asset: AssetsBackend.GetAssetResponse }) {
+    constructor(params: {
+        asset: AssetsBackend.GetAssetResponse
+        permissions: AssetsBackend.GetPermissionsResponse
+    }) {
         super({
             id: 'Overview',
             title: 'Overview',
@@ -97,12 +108,9 @@ export class GeneralTab extends DockableTabs.Tab {
                     children: [
                         getBackgroundChild$(params.asset),
                         new AssetOverview({
-                            asset: {
-                                ...params.asset,
-                                permissions: { read: true, write: true },
-                            } as any,
+                            asset: params.asset,
+                            permissions: params.permissions,
                             actionsFactory: undefined,
-                            assetOutput$: undefined,
                         }),
                     ],
                 }
@@ -113,7 +121,10 @@ export class GeneralTab extends DockableTabs.Tab {
 }
 
 export class PermissionsTab extends DockableTabs.Tab {
-    constructor(params: { asset: AssetsBackend.GetAssetResponse }) {
+    constructor(params: {
+        asset: AssetsBackend.GetAssetResponse
+        permissions: AssetsBackend.GetPermissionsResponse
+    }) {
         super({
             id: 'Permissions',
             title: 'Permissions',
@@ -128,6 +139,7 @@ export class PermissionsTab extends DockableTabs.Tab {
                         getBackgroundChild$(params.asset),
                         new AssetPermissionsView({
                             asset: params.asset,
+                            permissions: params.permissions,
                         }),
                     ],
                 }

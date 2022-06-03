@@ -1,6 +1,6 @@
 import { HTMLElement$, VirtualDOM } from '@youwol/flux-view'
 import { BehaviorSubject, combineLatest, Subject } from 'rxjs'
-import { mergeMap, shareReplay } from 'rxjs/operators'
+import { mergeMap, shareReplay, skip } from 'rxjs/operators'
 import {
     AssetsBackend,
     AssetsGateway,
@@ -10,14 +10,14 @@ import { AssetDescriptionView } from './description.view'
 import { AssetScreenShotsView } from './screenshots.view'
 import { AssetTagsView } from './tags.view'
 import { AssetTitleView } from './title.view'
-import { AssetWithPermissions } from '../models'
 
 export class AssetOverview implements VirtualDOM {
     static ClassSelector = 'asset-overview'
     public readonly class = `${AssetOverview.ClassSelector} w-100 p-3 px-5 h-100 overflow-auto`
     public readonly children: VirtualDOM[]
 
-    public readonly asset: AssetWithPermissions
+    public readonly asset: AssetsBackend.GetAssetResponse
+    public readonly permissions: AssetsBackend.GetPermissionsResponse
 
     public readonly name$: BehaviorSubject<string>
     public readonly tags$: BehaviorSubject<string[]>
@@ -38,8 +38,8 @@ export class AssetOverview implements VirtualDOM {
     }
 
     constructor(params: {
-        asset: AssetWithPermissions
-        assetOutput$?: Subject<AssetWithPermissions>
+        asset: AssetsBackend.GetAssetResponse
+        permissions: AssetsBackend.GetPermissionsResponse
         withTabs?: { [key: string]: VirtualDOM }
         forceReadonly?: boolean
         [key: string]: unknown
@@ -75,6 +75,7 @@ export class AssetOverview implements VirtualDOM {
 
         const screenShotsView = new AssetScreenShotsView({
             asset: this.asset,
+            permissions: this.permissions,
             images$: this.images$,
             forceReadonly: this.forceReadonly,
         })
@@ -83,17 +84,19 @@ export class AssetOverview implements VirtualDOM {
             new AssetTitleView({
                 name$: this.name$,
                 asset: this.asset,
-                forceReadonly: this.forceReadonly,
+                permissions: this.permissions,
             }),
             new AssetTagsView({
                 tags$: this.tags$,
                 asset: this.asset,
+                permissions: this.permissions,
                 forceReadonly: this.forceReadonly,
             }),
             screenShotsView,
             new AssetDescriptionView({
                 description$: this.description$,
                 asset: this.asset,
+                permissions: this.permissions,
                 forceReadonly: this.forceReadonly,
                 outsideClick$: this.click$,
             }),

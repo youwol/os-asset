@@ -1,27 +1,28 @@
 import { attr$, VirtualDOM } from '@youwol/flux-view'
 import { BehaviorSubject } from 'rxjs'
-import { AssetWithPermissions } from '../models'
+import { AssetsBackend } from '@youwol/http-clients'
 
 export class AssetTitleView implements VirtualDOM {
     static ClassSelector = 'asset-title-view'
 
     public readonly class = `${AssetTitleView.ClassSelector} w-100`
-    public readonly asset: AssetWithPermissions
+    public readonly asset: AssetsBackend.GetAssetResponse
+    public readonly permissions: AssetsBackend.GetPermissionsResponse
     public readonly children: VirtualDOM[]
     public readonly name$: BehaviorSubject<string>
     public readonly forceReadonly: boolean
 
     constructor(params: {
         name$: BehaviorSubject<string>
-        asset: AssetWithPermissions
-        forceReadonly?: boolean
+        asset: AssetsBackend.GetAssetResponse
+        permissions: AssetsBackend.GetPermissionsResponse
     }) {
         Object.assign(this, params)
 
-        this.children = [AssetTitleView.readOnlyView(this.name$)]
+        this.children = [this.readOnlyView(this.name$)]
     }
 
-    static readOnlyView(name$: BehaviorSubject<string>) {
+    readOnlyView(name$: BehaviorSubject<string>) {
         return {
             tag: 'h1',
             class: 'text-center',
@@ -29,6 +30,9 @@ export class AssetTitleView implements VirtualDOM {
                 fontWeight: 'bolder',
             },
             innerText: attr$(name$, (name) => name),
+            children: [
+                this.permissions.write ? {} : { class: 'fas fa-lock ml-3' },
+            ],
         }
     }
 }

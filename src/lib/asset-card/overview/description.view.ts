@@ -1,8 +1,8 @@
 import { install, LoadingScreenView } from '@youwol/cdn-client'
 import { attr$, child$, HTMLElement$, VirtualDOM } from '@youwol/flux-view'
 import { BehaviorSubject, from, Observable } from 'rxjs'
-import { AssetWithPermissions } from '../models'
 import { tap } from 'rxjs/operators'
+import { AssetsBackend } from '@youwol/http-clients'
 
 export class AssetDescriptionView implements VirtualDOM {
     static ClassSelector = 'asset-description-view'
@@ -13,7 +13,8 @@ export class AssetDescriptionView implements VirtualDOM {
     }
     public readonly children: VirtualDOM[]
     public readonly description$: BehaviorSubject<string>
-    public readonly asset: AssetWithPermissions
+    public readonly asset: AssetsBackend.GetAssetResponse
+    public readonly permissions: AssetsBackend.GetPermissionsResponse
     public readonly forceReadonly: boolean
     public readonly onclick = (event) => {
         event.stopPropagation()
@@ -21,7 +22,8 @@ export class AssetDescriptionView implements VirtualDOM {
 
     constructor(params: {
         description$: BehaviorSubject<string>
-        asset: AssetWithPermissions
+        asset: AssetsBackend.GetAssetResponse
+        permissions: AssetsBackend.GetPermissionsResponse
         outsideClick$: Observable<MouseEvent>
         forceReadonly?: boolean
     }) {
@@ -31,7 +33,7 @@ export class AssetDescriptionView implements VirtualDOM {
                 class: 'fv-bg-background fv-xx-lighter h-100 w-100',
                 style: { opacity: '0.5', position: 'absolute', zIndex: '-1' },
             },
-            this.asset.permissions.write && !this.forceReadonly
+            this.permissions.write && !this.forceReadonly
                 ? new DescriptionEditableView({
                       description$: this.description$,
                       outsideClick$: params.outsideClick$,

@@ -19,13 +19,17 @@ export class AssetPermissionsView implements VirtualDOM {
 
     public readonly accessInfo$: Observable<AccessInfo>
     public readonly asset: Asset
+    public readonly permissions: AssetsBackend.GetPermissionsResponse
     static readonly titleClass = 'w-100 text-center'
     static readonly titleStyle = {
         'font-family': 'fantasy',
         'font-size': 'large',
     }
 
-    constructor(params: { asset: Asset }) {
+    constructor(params: {
+        asset: Asset
+        permissions: AssetsBackend.GetPermissionsResponse
+    }) {
         Object.assign(this, params)
         this.accessInfo$ = new AssetsGateway.Client().assets
             .queryAccessInfo$({ assetId: this.asset.assetId })
@@ -53,6 +57,7 @@ export class AssetPermissionsView implements VirtualDOM {
                                 new GroupsPermissionsView({
                                     accessInfo,
                                     asset: this.asset,
+                                    permissions: this.permissions,
                                 }),
                             ],
                         },
@@ -132,9 +137,14 @@ export class GroupsPermissionsView implements VirtualDOM {
     public readonly children: VirtualDOM[] = []
 
     public readonly asset: Asset
+    public readonly permissions: AssetsBackend.GetPermissionsResponse
     public readonly accessInfo: AccessInfo
 
-    constructor(params: { accessInfo: AccessInfo; asset: Asset }) {
+    constructor(params: {
+        accessInfo: AccessInfo
+        asset: Asset
+        permissions: AssetsBackend.GetPermissionsResponse
+    }) {
         Object.assign(this, params)
 
         if (!this.accessInfo.ownerInfo) {
@@ -145,13 +155,21 @@ export class GroupsPermissionsView implements VirtualDOM {
             .filter((group) => group.name != 'private')
             .map((group) => {
                 return new ExposedGroupView(
-                    new ExposedGroupState(this.asset.assetId, group),
+                    new ExposedGroupState({
+                        asset: this.asset,
+                        permissions: this.permissions,
+                        data: group,
+                    }),
                 )
             })
-        const expState = new ExposedGroupState(this.asset.assetId, {
-            groupId: '*',
-            name: '*',
-            access: this.accessInfo.ownerInfo.defaultAccess,
+        const expState = new ExposedGroupState({
+            asset: this.asset,
+            permissions: this.permissions,
+            data: {
+                groupId: '*',
+                name: '*',
+                access: this.accessInfo.ownerInfo.defaultAccess,
+            },
         })
         const expView = new ExposedGroupView(expState)
 
