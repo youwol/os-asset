@@ -1,10 +1,30 @@
+const apiVersion = "002"
+const externals = {
+    "@youwol/http-clients": "@youwol/http-clients_APIv01",
+    "@youwol/flux-view": "@youwol/flux-view_APIv01",
+    "@youwol/os-core": "@youwol/os-core_APIv006",
+    "@youwol/fv-button": "@youwol/fv-button_APIv005",
+    "rxjs": "rxjs_APIv6",
+    "@youwol/cdn-client": "@youwol/cdn-client_APIv01",
+    "@youwol/fv-tabs": "@youwol/fv-tabs_APIv01",
+    "@youwol/fv-input": "@youwol/fv-input_APIv01",
+    "rxjs/operators": {
+        "commonjs": "rxjs/operators",
+        "commonjs2": "rxjs/operators",
+        "root": [
+            "rxjs_APIv6",
+            "operators"
+        ]
+    }
+}
 const path = require('path')
 const pkg = require('./package.json')
 const ROOT = path.resolve(__dirname, 'src')
 const DESTINATION = path.resolve(__dirname, 'dist')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
-const packageJson = require('./package.json')
+const assetId = Buffer.from(pkg.name).toString('base64')
+
 module.exports = {
     context: ROOT,
     entry: {
@@ -18,11 +38,11 @@ module.exports = {
         }),
     ],
     output: {
-        publicPath: `/api/assets-gateway/raw/package/QHlvdXdvbC9wbGF0Zm9ybS1lc3NlbnRpYWxz/${packageJson.version}/dist/`,
         path: DESTINATION,
+        publicPath: `/api/assets-gateway/raw/package/${assetId}/${pkg.version}/dist/`,
         libraryTarget: 'umd',
         umdNamedDefine: true,
-        library: pkg.name,
+        library: `${pkg.name}_APIv${apiVersion}`,
         filename: pkg.name + '.js',
         globalObject: `(typeof self !== 'undefined' ? self : this)`,
     },
@@ -30,25 +50,7 @@ module.exports = {
         extensions: ['.ts', 'tsx', '.js'],
         modules: [ROOT, 'node_modules'],
     },
-    externals: [
-        {
-            rxjs: 'rxjs',
-            'rxjs/operators': {
-                commonjs: 'rxjs/operators',
-                commonjs2: 'rxjs/operators',
-                root: ['rxjs', 'operators'],
-            },
-            '@youwol/cdn-client': '@youwol/cdn-client',
-            '@youwol/flux-view': '@youwol/flux-view',
-            '@youwol/fv-tabs': '@youwol/fv-tabs',
-            '@youwol/fv-button': '@youwol/fv-button',
-            '@youwol/fv-input': '@youwol/fv-input',
-            '@youwol/http-clients': '@youwol/http-clients',
-            '@youwol/os-core': '@youwol/os-core',
-            lodash: '_',
-            uuid: 'uuid',
-        },
-    ],
+    externals,
     module: {
         rules: [
             {
@@ -59,11 +61,4 @@ module.exports = {
         ],
     },
     devtool: 'source-map',
-    devServer: {
-        static: {
-            directory: path.join(__dirname, './src'),
-        },
-        compress: true,
-        port: 9000,
-    },
 }
