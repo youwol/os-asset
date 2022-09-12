@@ -24,7 +24,7 @@ export class AssetView implements VirtualDOM {
         permissions: AssetsBackend.GetPermissionsResponse
     }) {
         Object.assign(this, params)
-        let tabs$ = Installer.getInstallManifest$().pipe(
+        const tabs$ = Installer.getInstallManifest$().pipe(
             map(({ assetPreviews }) => {
                 return assetPreviews({
                     asset: this.asset,
@@ -63,7 +63,7 @@ export class AssetView implements VirtualDOM {
             selected$: new BehaviorSubject('Overview'),
             persistTabsView: false,
         })
-        let sideNav = new DockableTabs.View({
+        const sideNav = new DockableTabs.View({
             state: this.leftNavState,
             styleOptions: {
                 initialPanelSize: '400px',
