@@ -2,13 +2,25 @@ import shutil
 from pathlib import Path
 
 from youwol.pipelines.pipeline_typescript_weback_npm import Template, PackageType, Dependencies, \
-    RunTimeDeps, generate_template
+    RunTimeDeps, generate_template, Bundles, MainModule
 from youwol_utils import parse_json
 
 folder_path = Path(__file__).parent
 
 pkg_json = parse_json(folder_path / 'package.json')
 
+load_dependencies = {
+    "@youwol/flux-view": "^1.0.3",
+    "@youwol/http-clients": "^1.0.2",
+    "@youwol/cdn-client": "^1.0.2",
+    "@youwol/fv-input": "^0.2.1",
+    "@youwol/fv-button": "^0.1.1",
+    "@youwol/fv-tabs": "^0.2.1",
+    "@youwol/os-core": "^0.1.1",
+    "rxjs": "^6.5.5",
+    # ideally marked should be imported in due time (when DescriptionView is required)
+    "marked": "^4.2.3"
+}
 
 template = Template(
     path=folder_path,
@@ -19,19 +31,15 @@ template = Template(
     author=pkg_json['author'],
     dependencies=Dependencies(
         runTime=RunTimeDeps(
-            load={
-                "@youwol/flux-view": "^1.0.3",
-                "@youwol/http-clients": "^1.0.2",
-                "@youwol/cdn-client": "^1.0.2",
-                "@youwol/fv-input": "^0.2.1",
-                "@youwol/fv-button": "^0.1.1",
-                "@youwol/fv-tabs": "^0.2.1",
-                "@youwol/os-core": "^0.1.1",
-                "rxjs": "^6.5.5",
-
-            }
+            externals=load_dependencies
         ),
         devTime={}
+    ),
+    bundles=Bundles(
+        mainModule=MainModule(
+            entryFile="./index.ts",
+            loadDependencies=list(load_dependencies.keys())
+        )
     ),
     userGuide=True
 )

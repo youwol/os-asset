@@ -1,6 +1,6 @@
 
 const runTimeDependencies = {
-    "load": {
+    "externals": {
         "@youwol/flux-view": "^1.0.3",
         "@youwol/http-clients": "^1.0.2",
         "@youwol/cdn-client": "^1.0.2",
@@ -8,10 +8,10 @@ const runTimeDependencies = {
         "@youwol/fv-button": "^0.1.1",
         "@youwol/fv-tabs": "^0.2.1",
         "@youwol/os-core": "^0.1.1",
-        "rxjs": "^6.5.5"
+        "rxjs": "^6.5.5",
+        "marked": "^4.2.3"
     },
-    "differed": {},
-    "includedInBundle": []
+    "includedInBundle": {}
 }
 const externals = {
     "@youwol/flux-view": {
@@ -54,6 +54,11 @@ const externals = {
         "commonjs2": "rxjs",
         "root": "rxjs_APIv6"
     },
+    "marked": {
+        "commonjs": "marked",
+        "commonjs2": "marked",
+        "root": "marked_APIv4"
+    },
     "rxjs/operators": {
         "commonjs": "rxjs/operators",
         "commonjs2": "rxjs/operators",
@@ -95,12 +100,39 @@ const exportedSymbols = {
     "rxjs": {
         "apiKey": "6",
         "exportedSymbol": "rxjs"
+    },
+    "marked": {
+        "apiKey": "4",
+        "exportedSymbol": "marked"
     }
+}
+
+// eslint-disable-next-line @typescript-eslint/ban-types -- allow to allow no secondary entries
+const mainEntry : Object = {
+    "entryFile": "./index.ts",
+    "loadDependencies": [
+        "@youwol/flux-view",
+        "@youwol/http-clients",
+        "@youwol/cdn-client",
+        "@youwol/fv-input",
+        "@youwol/fv-button",
+        "@youwol/fv-tabs",
+        "@youwol/os-core",
+        "rxjs",
+        "marked"
+    ]
+}
+
+// eslint-disable-next-line @typescript-eslint/ban-types -- allow to allow no secondary entries
+const secondaryEntries : Object = {}
+const entries = {
+     '@youwol/os-asset': './index.ts',
+    ...Object.values(secondaryEntries).reduce( (acc,e) => ({...acc, [`@youwol/os-asset/${e.name}`]:e.entryFile}), {})
 }
 export const setup = {
     name:'@youwol/os-asset',
         assetId:'QHlvdXdvbC9vcy1hc3NldA==',
-    version:'0.1.1',
+    version:'0.1.2',
     shortDescription:"Collection of views related to asset of YouWol's Operating System.",
     developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/os-asset',
     npmPackage:'https://www.npmjs.com/package/@youwol/os-asset',
@@ -110,7 +142,46 @@ export const setup = {
     runTimeDependencies,
     externals,
     exportedSymbols,
+    entries,
     getDependencySymbolExported: (module:string) => {
         return `${exportedSymbols[module].exportedSymbol}_APIv${exportedSymbols[module].apiKey}`
+    },
+
+    installMainModule: ({cdnClient, installParameters}:{cdnClient, installParameters?}) => {
+        const parameters = installParameters || {}
+        const scripts = parameters.scripts || []
+        const modules = [
+            ...(parameters.modules || []),
+            ...mainEntry['loadDependencies'].map( d => `${d}#${runTimeDependencies.externals[d]}`)
+        ]
+        return cdnClient.install({
+            ...parameters,
+            modules,
+            scripts,
+        }).then(() => {
+            return window[`@youwol/os-asset_APIv01`]
+        })
+    },
+    installAuxiliaryModule: ({name, cdnClient, installParameters}:{name: string, cdnClient, installParameters?}) => {
+        const entry = secondaryEntries[name]
+        const parameters = installParameters || {}
+        const scripts = [
+            ...(parameters.scripts || []),
+            `@youwol/os-asset#0.1.2~dist/@youwol/os-asset/${entry.name}.js`
+        ]
+        const modules = [
+            ...(parameters.modules || []),
+            ...entry.loadDependencies.map( d => `${d}#${runTimeDependencies.externals[d]}`)
+        ]
+        if(!entry){
+            throw Error(`Can not find the secondary entry '${name}'. Referenced in template.py?`)
+        }
+        return cdnClient.install({
+            ...parameters,
+            modules,
+            scripts,
+        }).then(() => {
+            return window[`@youwol/os-asset/${entry.name}_APIv01`]
+        })
     }
 }
