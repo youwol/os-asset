@@ -3,6 +3,7 @@ import { attr$, child$, HTMLElement$, VirtualDOM } from '@youwol/flux-view'
 import { BehaviorSubject, from, Observable } from 'rxjs'
 import { tap } from 'rxjs/operators'
 import { AssetsBackend } from '@youwol/http-clients'
+import { parse } from 'marked'
 
 export class AssetDescriptionView implements VirtualDOM {
     static ClassSelector = 'asset-description-view'
@@ -50,7 +51,7 @@ export class AssetDescriptionView implements VirtualDOM {
             class: 'p-2',
             children: [
                 {
-                    innerHTML: attr$(description$, (d) => window['marked'](d)),
+                    innerHTML: attr$(description$, (d) => parse(d)),
                     ...params,
                 },
             ],
