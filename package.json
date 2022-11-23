@@ -69,7 +69,8 @@
         "@youwol/fv-button": "^0.1.1",
         "@youwol/fv-tabs": "^0.2.1",
         "@youwol/os-core": "^0.1.1",
-        "rxjs": "^6.5.5"
+        "rxjs": "^6.5.5",
+        "marked": "^4.2.3"
     },
     "youwol": {
         "cdnDependencies": {
@@ -80,7 +81,8 @@
             "@youwol/fv-button": "^0.1.1",
             "@youwol/fv-tabs": "^0.2.1",
             "@youwol/os-core": "^0.1.1",
-            "rxjs": "^6.5.5"
+            "rxjs": "^6.5.5",
+            "marked": "^4.2.3"
         }
     }
 }

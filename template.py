@@ -17,7 +17,9 @@ load_dependencies = {
     "@youwol/fv-button": "^0.1.1",
     "@youwol/fv-tabs": "^0.2.1",
     "@youwol/os-core": "^0.1.1",
-    "rxjs": "^6.5.5"
+    "rxjs": "^6.5.5",
+    # ideally marked should be imported in due time (when DescriptionView is required)
+    "marked": "^4.2.3"
 }
 
 template = Template(

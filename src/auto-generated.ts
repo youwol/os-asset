@@ -8,7 +8,8 @@ const runTimeDependencies = {
         "@youwol/fv-button": "^0.1.1",
         "@youwol/fv-tabs": "^0.2.1",
         "@youwol/os-core": "^0.1.1",
-        "rxjs": "^6.5.5"
+        "rxjs": "^6.5.5",
+        "marked": "^4.2.3"
     },
     "includedInBundle": {}
 }
@@ -53,6 +54,11 @@ const externals = {
         "commonjs2": "rxjs",
         "root": "rxjs_APIv6"
     },
+    "marked": {
+        "commonjs": "marked",
+        "commonjs2": "marked",
+        "root": "marked_APIv4"
+    },
     "rxjs/operators": {
         "commonjs": "rxjs/operators",
         "commonjs2": "rxjs/operators",
@@ -94,6 +100,10 @@ const exportedSymbols = {
     "rxjs": {
         "apiKey": "6",
         "exportedSymbol": "rxjs"
+    },
+    "marked": {
+        "apiKey": "4",
+        "exportedSymbol": "marked"
     }
 }
 
@@ -108,7 +118,8 @@ const mainEntry : Object = {
         "@youwol/fv-button",
         "@youwol/fv-tabs",
         "@youwol/os-core",
-        "rxjs"
+        "rxjs",
+        "marked"
     ]
 }
 
