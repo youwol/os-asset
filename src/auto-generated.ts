@@ -3,6 +3,7 @@ const runTimeDependencies = {
     "externals": {
         "@youwol/flux-view": "^1.0.3",
         "@youwol/http-clients": "^2.0.5",
+        "@youwol/http-primitives": "^0.1.2",
         "@youwol/cdn-client": "^2.1.0",
         "@youwol/fv-input": "^0.2.1",
         "@youwol/fv-button": "^0.1.1",
@@ -23,6 +24,11 @@ const externals = {
         "commonjs": "@youwol/http-clients",
         "commonjs2": "@youwol/http-clients",
         "root": "@youwol/http-clients_APIv2"
+    },
+    "@youwol/http-primitives": {
+        "commonjs": "@youwol/http-primitives",
+        "commonjs2": "@youwol/http-primitives",
+        "root": "@youwol/http-primitives_APIv01"
     },
     "@youwol/cdn-client": {
         "commonjs": "@youwol/cdn-client",
@@ -77,6 +83,10 @@ const exportedSymbols = {
         "apiKey": "2",
         "exportedSymbol": "@youwol/http-clients"
     },
+    "@youwol/http-primitives": {
+        "apiKey": "01",
+        "exportedSymbol": "@youwol/http-primitives"
+    },
     "@youwol/cdn-client": {
         "apiKey": "2",
         "exportedSymbol": "@youwol/cdn-client"
@@ -112,6 +122,7 @@ const mainEntry : {entryFile: string,loadDependencies:string[]} = {
     "loadDependencies": [
         "@youwol/flux-view",
         "@youwol/http-clients",
+        "@youwol/http-primitives",
         "@youwol/cdn-client",
         "@youwol/fv-input",
         "@youwol/fv-button",
