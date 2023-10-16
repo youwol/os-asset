@@ -1,7 +1,7 @@
 {
     "name": "@youwol/os-asset",
     "description": "Collection of views related to asset of YouWol's Operating System.",
-    "version": "0.1.2",
+    "version": "0.1.3-wip",
     "author": "greinisch@youwol.com",
     "homepage": "https://github.com/youwol/os-asset#README.md",
     "main": "dist/@youwol/os-asset.js",
