@@ -2,12 +2,13 @@
 const runTimeDependencies = {
     "externals": {
         "@youwol/flux-view": "^1.0.3",
-        "@youwol/http-clients": "^1.0.2",
-        "@youwol/cdn-client": "^1.0.2",
+        "@youwol/http-clients": "^2.0.5",
+        "@youwol/http-primitives": "^0.1.2",
+        "@youwol/cdn-client": "^2.1.0",
         "@youwol/fv-input": "^0.2.1",
         "@youwol/fv-button": "^0.1.1",
         "@youwol/fv-tabs": "^0.2.1",
-        "@youwol/os-core": "^0.1.1",
+        "@youwol/os-core": "^0.1.13",
         "rxjs": "^6.5.5",
         "marked": "^4.2.3"
     },
@@ -22,12 +23,17 @@ const externals = {
     "@youwol/http-clients": {
         "commonjs": "@youwol/http-clients",
         "commonjs2": "@youwol/http-clients",
-        "root": "@youwol/http-clients_APIv1"
+        "root": "@youwol/http-clients_APIv2"
+    },
+    "@youwol/http-primitives": {
+        "commonjs": "@youwol/http-primitives",
+        "commonjs2": "@youwol/http-primitives",
+        "root": "@youwol/http-primitives_APIv01"
     },
     "@youwol/cdn-client": {
         "commonjs": "@youwol/cdn-client",
         "commonjs2": "@youwol/cdn-client",
-        "root": "@youwol/cdn-client_APIv1"
+        "root": "@youwol/cdn-client_APIv2"
     },
     "@youwol/fv-input": {
         "commonjs": "@youwol/fv-input",
@@ -74,11 +80,15 @@ const exportedSymbols = {
         "exportedSymbol": "@youwol/flux-view"
     },
     "@youwol/http-clients": {
-        "apiKey": "1",
+        "apiKey": "2",
         "exportedSymbol": "@youwol/http-clients"
     },
+    "@youwol/http-primitives": {
+        "apiKey": "01",
+        "exportedSymbol": "@youwol/http-primitives"
+    },
     "@youwol/cdn-client": {
-        "apiKey": "1",
+        "apiKey": "2",
         "exportedSymbol": "@youwol/cdn-client"
     },
     "@youwol/fv-input": {
@@ -112,6 +122,7 @@ const mainEntry : {entryFile: string,loadDependencies:string[]} = {
     "loadDependencies": [
         "@youwol/flux-view",
         "@youwol/http-clients",
+        "@youwol/http-primitives",
         "@youwol/cdn-client",
         "@youwol/fv-input",
         "@youwol/fv-button",
@@ -131,9 +142,9 @@ const entries = {
 export const setup = {
     name:'@youwol/os-asset',
         assetId:'QHlvdXdvbC9vcy1hc3NldA==',
-    version:'0.1.2',
+    version:'0.1.3',
     shortDescription:"Collection of views related to asset of YouWol's Operating System.",
-    developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/os-asset',
+    developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/os-asset&tab=doc',
     npmPackage:'https://www.npmjs.com/package/@youwol/os-asset',
     sourceGithub:'https://github.com/youwol/os-asset',
     userGuide:'https://l.youwol.com/doc/@youwol/os-asset',
@@ -148,7 +159,7 @@ export const setup = {
     },
 
     installMainModule: ({cdnClient, installParameters}:{
-        cdnClient:{install:(unknown) => Promise<Window>},
+        cdnClient:{install:(unknown) => Promise<WindowOrWorkerGlobalScope>},
         installParameters?
     }) => {
         const parameters = installParameters || {}
@@ -167,7 +178,7 @@ export const setup = {
     },
     installAuxiliaryModule: ({name, cdnClient, installParameters}:{
         name: string,
-        cdnClient:{install:(unknown) => Promise<Window>},
+        cdnClient:{install:(unknown) => Promise<WindowOrWorkerGlobalScope>},
         installParameters?
     }) => {
         const entry = secondaryEntries[name]
@@ -177,7 +188,7 @@ export const setup = {
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `@youwol/os-asset#0.1.2~dist/@youwol/os-asset/${entry.name}.js`
+            `@youwol/os-asset#0.1.3~dist/@youwol/os-asset/${entry.name}.js`
         ]
         const modules = [
             ...(parameters.modules || []),

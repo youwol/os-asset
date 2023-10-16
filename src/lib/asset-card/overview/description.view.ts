@@ -61,7 +61,7 @@ export class AssetDescriptionView implements VirtualDOM {
 
 function fetchDependencies$(
     loadingScreenContainer: HTMLDivElement,
-): Observable<Window> {
+): Observable<WindowOrWorkerGlobalScope> {
     const loadingScreen = new LoadingScreenView({
         container: loadingScreenContainer,
         logo: `<div style='font-size:x-large'>Markdown</div>`,
@@ -77,28 +77,24 @@ function fetchDependencies$(
     loadingScreen.render()
 
     return from(
-        install(
-            {
-                modules: ['codemirror'],
-                scripts: [
-                    'codemirror#5.52.0~mode/javascript.min.js',
-                    'codemirror#5.52.0~mode/markdown.min.js',
-                    'codemirror#5.52.0~mode/css.min.js',
-                    'codemirror#5.52.0~mode/xml.min.js',
-                    'codemirror#5.52.0~mode/htmlmixed.min.js',
-                    'codemirror#5.52.0~mode/gfm.min.js',
-                ],
-                css: [
-                    'codemirror#5.52.0~codemirror.min.css',
-                    'codemirror#5.52.0~theme/blackboard.min.css',
-                ],
+        install({
+            modules: ['codemirror'],
+            scripts: [
+                'codemirror#5.52.0~mode/javascript.min.js',
+                'codemirror#5.52.0~mode/markdown.min.js',
+                'codemirror#5.52.0~mode/css.min.js',
+                'codemirror#5.52.0~mode/xml.min.js',
+                'codemirror#5.52.0~mode/htmlmixed.min.js',
+                'codemirror#5.52.0~mode/gfm.min.js',
+            ],
+            css: [
+                'codemirror#5.52.0~codemirror.min.css',
+                'codemirror#5.52.0~theme/blackboard.min.css',
+            ],
+            onEvent: (ev) => {
+                loadingScreen.next(ev)
             },
-            {
-                onEvent: (ev) => {
-                    loadingScreen.next(ev)
-                },
-            },
-        ),
+        }),
     ).pipe(
         tap(() => {
             loadingScreen.done()

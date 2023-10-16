@@ -2,11 +2,8 @@ import { child$, VirtualDOM } from '@youwol/flux-view'
 import { Observable } from 'rxjs'
 import { share } from 'rxjs/operators'
 
-import {
-    AssetsBackend,
-    AssetsGateway,
-    raiseHTTPErrors,
-} from '@youwol/http-clients'
+import { AssetsBackend, AssetsGateway } from '@youwol/http-clients'
+import { raiseHTTPErrors } from '@youwol/http-primitives'
 import { ExposedGroupState, ExposedGroupView } from './group-permissions.view'
 
 type AccessInfo = AssetsBackend.QueryAccessInfoResponse
