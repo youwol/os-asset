@@ -1,10 +1,7 @@
 import { child$, HTMLElement$, VirtualDOM } from '@youwol/flux-view'
 import { Select } from '@youwol/fv-input'
-import {
-    AssetsBackend,
-    AssetsGateway,
-    raiseHTTPErrors,
-} from '@youwol/http-clients'
+import { AssetsBackend, AssetsGateway } from '@youwol/http-clients'
+import { raiseHTTPErrors } from '@youwol/http-primitives'
 import { BehaviorSubject, combineLatest, Subject } from 'rxjs'
 import { distinct, map, skip } from 'rxjs/operators'
 

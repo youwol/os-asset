@@ -1,11 +1,8 @@
 import { HTMLElement$, VirtualDOM } from '@youwol/flux-view'
 import { BehaviorSubject, combineLatest, Subject } from 'rxjs'
 import { mergeMap, shareReplay, skip } from 'rxjs/operators'
-import {
-    AssetsBackend,
-    AssetsGateway,
-    raiseHTTPErrors,
-} from '@youwol/http-clients'
+import { AssetsBackend, AssetsGateway } from '@youwol/http-clients'
+import { raiseHTTPErrors } from '@youwol/http-primitives'
 import { AssetDescriptionView } from './description.view'
 import { AssetScreenShotsView } from './screenshots.view'
 import { AssetTagsView } from './tags.view'
