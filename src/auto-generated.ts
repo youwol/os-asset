@@ -142,7 +142,7 @@ const entries = {
 export const setup = {
     name:'@youwol/os-asset',
         assetId:'QHlvdXdvbC9vcy1hc3NldA==',
-    version:'0.1.4-wip',
+    version:'0.1.4',
     shortDescription:"Collection of views related to asset of YouWol's Operating System.",
     developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/os-asset&tab=doc',
     npmPackage:'https://www.npmjs.com/package/@youwol/os-asset',
@@ -188,7 +188,7 @@ export const setup = {
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `@youwol/os-asset#0.1.4-wip~dist/@youwol/os-asset/${entry.name}.js`
+            `@youwol/os-asset#0.1.4~dist/@youwol/os-asset/${entry.name}.js`
         ]
         const modules = [
             ...(parameters.modules || []),
