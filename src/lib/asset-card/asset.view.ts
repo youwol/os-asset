@@ -1,6 +1,6 @@
 import { child$, VirtualDOM } from '@youwol/flux-view'
 import { AssetsBackend, AssetsGateway } from '@youwol/http-clients'
-import { BehaviorSubject } from 'rxjs'
+import { BehaviorSubject, from } from 'rxjs'
 import { DockableTabs } from '@youwol/fv-tabs'
 import { map } from 'rxjs/operators'
 import * as cdnClient from '@youwol/cdn-client'
@@ -78,7 +78,7 @@ export class AssetView implements VirtualDOM {
 
 function getBackgroundChild$(asset: AssetsBackend.GetAssetResponse) {
     return child$(defaultOpeningApp$(asset), (info) => {
-        return info && info.appInfo.graphics && info.appInfo.graphics.background
+        return info?.appInfo?.graphics?.background
             ? {
                   class: 'w-100 h-100',
                   style: {
@@ -153,7 +153,7 @@ export class CustomTab extends DockableTabs.Tab {
     constructor(params: {
         asset: AssetsBackend.GetAssetResponse
         name: string
-        preview: VirtualDOM
+        preview: VirtualDOM | Promise<VirtualDOM>
         icon: string
     }) {
         super({
@@ -161,6 +161,13 @@ export class CustomTab extends DockableTabs.Tab {
             title: params.name,
             icon: params.icon,
             content: () => {
+                if (params.preview instanceof Promise) {
+                    return {
+                        children: [
+                            child$(from(params.preview), (view) => view),
+                        ],
+                    }
+                }
                 return params.preview
             },
         })
