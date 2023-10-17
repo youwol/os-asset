@@ -78,7 +78,7 @@ export class AssetView implements VirtualDOM {
 
 function getBackgroundChild$(asset: AssetsBackend.GetAssetResponse) {
     return child$(defaultOpeningApp$(asset), (info) => {
-        return info && info.appInfo.graphics && info.appInfo.graphics.background
+        return info?.appInfo?.graphics?.background
             ? {
                   class: 'w-100 h-100',
                   style: {
