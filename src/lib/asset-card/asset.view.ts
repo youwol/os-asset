@@ -153,7 +153,7 @@ export class CustomTab extends DockableTabs.Tab {
     constructor(params: {
         asset: AssetsBackend.GetAssetResponse
         name: string
-        preview: VirtualDOM
+        preview: VirtualDOM | Promise<VirtualDOM>
         icon: string
     }) {
         super({
