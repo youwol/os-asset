@@ -1,24 +1,44 @@
 
 const runTimeDependencies = {
     "externals": {
+        "@youwol/cdn-client": "^2.1.0",
         "@youwol/flux-view": "^1.0.3",
+        "@youwol/fv-button": "^0.1.1",
+        "@youwol/fv-input": "^0.2.1",
+        "@youwol/fv-tabs": "^0.2.1",
         "@youwol/http-clients": "^2.0.5",
         "@youwol/http-primitives": "^0.1.2",
-        "@youwol/cdn-client": "^2.1.0",
-        "@youwol/fv-input": "^0.2.1",
-        "@youwol/fv-button": "^0.1.1",
-        "@youwol/fv-tabs": "^0.2.1",
         "@youwol/os-core": "^0.1.13",
-        "rxjs": "^6.5.5",
-        "marked": "^4.2.3"
+        "marked": "^4.2.3",
+        "rxjs": "^6.5.5"
     },
     "includedInBundle": {}
 }
 const externals = {
+    "@youwol/cdn-client": {
+        "commonjs": "@youwol/cdn-client",
+        "commonjs2": "@youwol/cdn-client",
+        "root": "@youwol/cdn-client_APIv2"
+    },
     "@youwol/flux-view": {
         "commonjs": "@youwol/flux-view",
         "commonjs2": "@youwol/flux-view",
         "root": "@youwol/flux-view_APIv1"
+    },
+    "@youwol/fv-button": {
+        "commonjs": "@youwol/fv-button",
+        "commonjs2": "@youwol/fv-button",
+        "root": "@youwol/fv-button_APIv01"
+    },
+    "@youwol/fv-input": {
+        "commonjs": "@youwol/fv-input",
+        "commonjs2": "@youwol/fv-input",
+        "root": "@youwol/fv-input_APIv02"
+    },
+    "@youwol/fv-tabs": {
+        "commonjs": "@youwol/fv-tabs",
+        "commonjs2": "@youwol/fv-tabs",
+        "root": "@youwol/fv-tabs_APIv02"
     },
     "@youwol/http-clients": {
         "commonjs": "@youwol/http-clients",
@@ -30,40 +50,20 @@ const externals = {
         "commonjs2": "@youwol/http-primitives",
         "root": "@youwol/http-primitives_APIv01"
     },
-    "@youwol/cdn-client": {
-        "commonjs": "@youwol/cdn-client",
-        "commonjs2": "@youwol/cdn-client",
-        "root": "@youwol/cdn-client_APIv2"
-    },
-    "@youwol/fv-input": {
-        "commonjs": "@youwol/fv-input",
-        "commonjs2": "@youwol/fv-input",
-        "root": "@youwol/fv-input_APIv02"
-    },
-    "@youwol/fv-button": {
-        "commonjs": "@youwol/fv-button",
-        "commonjs2": "@youwol/fv-button",
-        "root": "@youwol/fv-button_APIv01"
-    },
-    "@youwol/fv-tabs": {
-        "commonjs": "@youwol/fv-tabs",
-        "commonjs2": "@youwol/fv-tabs",
-        "root": "@youwol/fv-tabs_APIv02"
-    },
     "@youwol/os-core": {
         "commonjs": "@youwol/os-core",
         "commonjs2": "@youwol/os-core",
         "root": "@youwol/os-core_APIv01"
     },
-    "rxjs": {
-        "commonjs": "rxjs",
-        "commonjs2": "rxjs",
-        "root": "rxjs_APIv6"
-    },
     "marked": {
         "commonjs": "marked",
         "commonjs2": "marked",
         "root": "marked_APIv4"
+    },
+    "rxjs": {
+        "commonjs": "rxjs",
+        "commonjs2": "rxjs",
+        "root": "rxjs_APIv6"
     },
     "rxjs/operators": {
         "commonjs": "rxjs/operators",
@@ -75,9 +75,25 @@ const externals = {
     }
 }
 const exportedSymbols = {
+    "@youwol/cdn-client": {
+        "apiKey": "2",
+        "exportedSymbol": "@youwol/cdn-client"
+    },
     "@youwol/flux-view": {
         "apiKey": "1",
         "exportedSymbol": "@youwol/flux-view"
+    },
+    "@youwol/fv-button": {
+        "apiKey": "01",
+        "exportedSymbol": "@youwol/fv-button"
+    },
+    "@youwol/fv-input": {
+        "apiKey": "02",
+        "exportedSymbol": "@youwol/fv-input"
+    },
+    "@youwol/fv-tabs": {
+        "apiKey": "02",
+        "exportedSymbol": "@youwol/fv-tabs"
     },
     "@youwol/http-clients": {
         "apiKey": "2",
@@ -87,33 +103,17 @@ const exportedSymbols = {
         "apiKey": "01",
         "exportedSymbol": "@youwol/http-primitives"
     },
-    "@youwol/cdn-client": {
-        "apiKey": "2",
-        "exportedSymbol": "@youwol/cdn-client"
-    },
-    "@youwol/fv-input": {
-        "apiKey": "02",
-        "exportedSymbol": "@youwol/fv-input"
-    },
-    "@youwol/fv-button": {
-        "apiKey": "01",
-        "exportedSymbol": "@youwol/fv-button"
-    },
-    "@youwol/fv-tabs": {
-        "apiKey": "02",
-        "exportedSymbol": "@youwol/fv-tabs"
-    },
     "@youwol/os-core": {
         "apiKey": "01",
         "exportedSymbol": "@youwol/os-core"
     },
-    "rxjs": {
-        "apiKey": "6",
-        "exportedSymbol": "rxjs"
-    },
     "marked": {
         "apiKey": "4",
         "exportedSymbol": "marked"
+    },
+    "rxjs": {
+        "apiKey": "6",
+        "exportedSymbol": "rxjs"
     }
 }
 

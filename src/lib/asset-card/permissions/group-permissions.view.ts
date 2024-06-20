@@ -59,7 +59,7 @@ export class ExposedGroupState {
                     name: this.groupName,
                     groupId: this.groupId,
                     access: groupAccess, // XXX : Type Problem
-                } as any)
+                } as any) // eslint-disable-line @typescript-eslint/no-explicit-any -- groupAccess typing
                 this.loading$.next(false)
             })
     }
@@ -74,7 +74,11 @@ export class ExposedGroupView implements VirtualDOM {
 
     constructor(state: ExposedGroupState) {
         class Item extends Select.ItemData {
-            constructor(id, name, public readonly expiration) {
+            constructor(
+                id,
+                name,
+                public readonly expiration,
+            ) {
                 super(id, name)
             }
         }
